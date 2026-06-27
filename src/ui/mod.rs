@@ -7,16 +7,6 @@ use eframe::egui;
 use crate::app::{App, Tab};
 
 pub fn show(app: &mut App, ctx: &egui::Context) {
-    if app.show_wayland_warning {
-        egui::TopBottomPanel::top("wayland_warning").show(ctx, |ui| {
-            ui.colored_label(
-                egui::Color32::from_rgb(240, 160, 0),
-                "⚠  Wayland detected: global hotkeys may not work. \
-                 Run the app under XWayland or with DISPLAY set.",
-            );
-        });
-    }
-
     egui::TopBottomPanel::top("profile_bar").show(ctx, |ui| {
         show_profile_bar(app, ui);
     });
