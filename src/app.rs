@@ -5,7 +5,7 @@ use std::sync::{mpsc, Arc, Mutex};
 use eframe::egui;
 
 use crate::clicker::{ClickButton, ClickMode, ClickType, ClickerConfig, ClickerHandle, SequenceItem};
-use crate::hotkey::{self, HotkeyConfig, HotkeyEvent};
+use crate::hotkey::{self, HotkeyConfig, HotkeyEvent, RecordingTarget};
 use crate::profile::Profile;
 use crate::ui;
 
@@ -48,8 +48,8 @@ pub struct App {
 
     hotkey_rx: mpsc::Receiver<HotkeyEvent>,
     pub hotkey_config: Arc<Mutex<HotkeyConfig>>,
+    pub recording_hotkey: Option<RecordingTarget>,
     pub always_on_top: bool,
-    pub show_wayland_warning: bool,
 }
 
 impl App {
@@ -65,10 +65,6 @@ impl App {
             .join("awesomeclicker");
 
         let available_profiles = Profile::list(&profiles_dir);
-
-        let show_wayland_warning = cfg!(target_os = "linux")
-            && std::env::var("WAYLAND_DISPLAY").is_ok()
-            && std::env::var("DISPLAY").is_err();
 
         App {
             cps: 10.0,
@@ -92,8 +88,8 @@ impl App {
             click_count_display: 0,
             hotkey_rx,
             hotkey_config,
+            recording_hotkey: None,
             always_on_top: false,
-            show_wayland_warning,
         }
     }
 
@@ -152,6 +148,15 @@ impl App {
                         self.capture_next = false;
                         self.status = format!("Captured ({}, {})", x, y);
                     }
+                }
+                HotkeyEvent::Recorded { target, key } => {
+                    let mut cfg = self.hotkey_config.lock().unwrap();
+                    match target {
+                        RecordingTarget::Toggle => cfg.toggle_key = key,
+                        RecordingTarget::Capture => cfg.capture_key = key,
+                    }
+                    self.recording_hotkey = None;
+                    self.status = format!("Hotkey set to {}", key.name());
                 }
             }
         }
