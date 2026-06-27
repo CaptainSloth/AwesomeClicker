@@ -7,12 +7,12 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
     ui.add_space(4.0);
     ui.strong("Hotkeys");
     ui.separator();
-    ui.label("Click a key button then press any F-key to reassign it.");
+    ui.label("Click a key button then press any key (with Ctrl/Shift/Alt if desired) to reassign it.");
     ui.add_space(6.0);
 
     let (toggle_name, capture_name) = {
         let cfg = app.hotkey_config.lock().unwrap();
-        (cfg.toggle_key.name(), cfg.capture_key.name())
+        (cfg.toggle_key.name(), cfg.capture_key.name())  // both return String now
     };
 
     egui::Grid::new("hotkey_grid")
@@ -20,7 +20,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         .spacing([10.0, 10.0])
         .show(ui, |ui| {
             ui.label("Toggle Start/Stop:");
-            key_record_button(ui, "toggle_btn", toggle_name,
+            key_record_button(ui, "toggle_btn", &toggle_name,
                 app.recording_hotkey == Some(RecordingTarget::Toggle),
                 || {
                     app.recording_hotkey = Some(RecordingTarget::Toggle);
@@ -29,7 +29,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             ui.end_row();
 
             ui.label("Capture Location:");
-            key_record_button(ui, "capture_btn", capture_name,
+            key_record_button(ui, "capture_btn", &capture_name,
                 app.recording_hotkey == Some(RecordingTarget::Capture),
                 || {
                     app.recording_hotkey = Some(RecordingTarget::Capture);
@@ -61,7 +61,7 @@ fn key_record_button(
     mut on_click: impl FnMut(),
 ) {
     let (label, fill) = if is_recording {
-        ("Press F1–F12…".to_string(), egui::Color32::from_rgb(240, 160, 0))
+        ("Press any key…".to_string(), egui::Color32::from_rgb(240, 160, 0))
     } else {
         (current_name.to_string(), ui.visuals().widgets.inactive.bg_fill)
     };

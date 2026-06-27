@@ -150,13 +150,18 @@ impl App {
                     }
                 }
                 HotkeyEvent::Recorded { target, key } => {
+                    let name = key.name();
                     let mut cfg = self.hotkey_config.lock().unwrap();
                     match target {
                         RecordingTarget::Toggle => cfg.toggle_key = key,
                         RecordingTarget::Capture => cfg.capture_key = key,
                     }
                     self.recording_hotkey = None;
-                    self.status = format!("Hotkey set to {}", key.name());
+                    self.status = format!("Hotkey set to {}", name);
+                }
+                HotkeyEvent::RecordingCancelled => {
+                    self.recording_hotkey = None;
+                    self.status = "Hotkey recording cancelled".into();
                 }
             }
         }
