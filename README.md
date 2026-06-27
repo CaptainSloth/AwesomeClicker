@@ -1,6 +1,26 @@
 # AwesomeClicker
 
+[![Release](https://img.shields.io/github/v/release/CaptainSloth/AwesomeClicker)](https://github.com/CaptainSloth/AwesomeClicker/releases/latest)
+
 A cross-platform auto clicker built with Rust and egui.
+
+## Download
+
+Grab the latest pre-built binary from the [Releases page](https://github.com/CaptainSloth/AwesomeClicker/releases/latest) — no build tools needed:
+
+| Platform | File |
+|---|---|
+| Linux | `AwesomeClicker-x86_64.AppImage` — mark executable, double-click |
+| Windows | `AwesomeClicker-Windows-x86_64.exe` — double-click to run |
+
+### Publishing a new release
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+GitHub Actions will build both files automatically and attach them to a new Release.
 
 ## Quick Install (Linux)
 
