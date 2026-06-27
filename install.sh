@@ -14,6 +14,9 @@ header()  { echo -e "\n${BOLD}$*${RESET}"; }
 # ── config ────────────────────────────────────────────────────────────────────
 BINARY_NAME="awesome-clicker"
 INSTALL_DIR="/usr/local/bin"
+ICON_NAME="awesome-clicker"
+ICON_SRC="assets/icon.svg"
+ICON_DIR="$HOME/.local/share/icons/hicolor/scalable/apps"
 DESKTOP_DIR="$HOME/.local/share/applications"
 DESKTOP_FILE="$DESKTOP_DIR/awesome-clicker.desktop"
 
@@ -86,7 +89,6 @@ install_rust() {
 # ── build ─────────────────────────────────────────────────────────────────────
 build_release() {
     header "Building release binary"
-    # Make sure cargo is on PATH in this shell
     [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
     cargo build --release
     success "Build complete → target/release/${BINARY_NAME}"
@@ -99,6 +101,21 @@ install_binary() {
     success "Installed to ${INSTALL_DIR}/${BINARY_NAME}"
 }
 
+# ── install icon ──────────────────────────────────────────────────────────────
+install_icon() {
+    header "Installing icon"
+    if [[ ! -f "$ICON_SRC" ]]; then
+        warn "Icon not found at ${ICON_SRC} — skipping"
+        return
+    fi
+    mkdir -p "$ICON_DIR"
+    cp "$ICON_SRC" "${ICON_DIR}/${ICON_NAME}.svg"
+    # Refresh icon cache if gtk-update-icon-cache is available
+    command -v gtk-update-icon-cache &>/dev/null \
+        && gtk-update-icon-cache -f -t "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
+    success "Icon installed to ${ICON_DIR}/${ICON_NAME}.svg"
+}
+
 # ── desktop entry ─────────────────────────────────────────────────────────────
 install_desktop_entry() {
     header "Creating desktop entry"
@@ -108,16 +125,16 @@ install_desktop_entry() {
 Name=AwesomeClicker
 Comment=Cross-platform auto clicker
 Exec=${INSTALL_DIR}/${BINARY_NAME}
-Icon=input-mouse
+Icon=${ICON_NAME}
 Terminal=false
 Type=Application
 Categories=Utility;
 Keywords=clicker;auto;mouse;
+StartupWMClass=awesome-clicker
 EOF
-    # Let the desktop environment pick it up
     command -v update-desktop-database &>/dev/null \
         && update-desktop-database "$DESKTOP_DIR" 2>/dev/null || true
-    success "Desktop entry created at ${DESKTOP_FILE}"
+    success "Desktop entry created — app will appear in your launcher"
 }
 
 # ── main ──────────────────────────────────────────────────────────────────────
@@ -127,7 +144,6 @@ echo "  ║     AwesomeClicker Installer  ║"
 echo "  ╚═══════════════════════════════╝"
 echo -e "${RESET}"
 
-# Must be run from the repo root
 if [[ ! -f "Cargo.toml" ]]; then
     error "Run this script from the AwesomeClicker repo directory."
 fi
@@ -136,9 +152,11 @@ install_system_deps
 install_rust
 build_release
 install_binary
+install_icon
 install_desktop_entry
 
 echo ""
 echo -e "${GREEN}${BOLD}All done!${RESET}"
-echo -e "Run it anywhere with:  ${BOLD}awesome-clicker${RESET}"
-echo -e "Or find it in your application launcher."
+echo -e "  • Run from terminal:   ${BOLD}awesome-clicker${RESET}"
+echo -e "  • From launcher:       press ${BOLD}Super${RESET}, search \"AwesomeClicker\""
+echo -e "  • Pin to dock:         right-click the icon → Add to Favorites"

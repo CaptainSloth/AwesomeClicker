@@ -4,20 +4,44 @@ A cross-platform auto clicker built with Rust and egui.
 
 ## Quick Install (Linux)
 
-Run the installer script from the repo directory — it handles everything automatically:
+### Option 1 — App Launcher (recommended for Pop!_OS / GNOME desktops)
+
+Run the installer from the repo directory:
 
 ```bash
 ./install.sh
 ```
 
-The script will:
-1. Install system libraries (`libx11-dev`, `libxtst-dev`, `libxdo-dev`, `pkg-config`)
-2. Install Rust via rustup if not already present and add `cargo` to your shell PATH
-3. Build an optimised release binary
-4. Install it to `/usr/local/bin/awesome-clicker` (requires sudo)
-5. Create a `.desktop` entry so it appears in your application launcher
+This handles everything automatically:
+1. Installs system libraries (`libx11-dev`, `libxtst-dev`, `libxdo-dev`, `pkg-config`)
+2. Installs Rust via rustup if not already present and adds `cargo` to your shell PATH
+3. Builds an optimised release binary
+4. Installs it to `/usr/local/bin/awesome-clicker` (requires sudo)
+5. Installs the app icon to your icon theme
+6. Creates a `.desktop` entry so it appears in your application launcher
+
+After installing:
+- Press **Super**, search **AwesomeClicker**, click to launch
+- Right-click the icon → **Add to Favorites** to pin it to the dock
 
 Supports **apt** (Ubuntu/Debian/Pop!_OS), **dnf** (Fedora), **pacman** (Arch), and **zypper** (openSUSE).
+
+---
+
+### Option 2 — AppImage (portable double-clickable file)
+
+Build a single self-contained `.AppImage` file — no installation required, works on any Linux distro:
+
+```bash
+./build-appimage.sh
+```
+
+This produces `AwesomeClicker-x86_64.AppImage` in the repo directory. To run it:
+
+1. Right-click → **Properties** → **Allow executing as program** (or `chmod +x AwesomeClicker-x86_64.AppImage`)
+2. Double-click to launch
+
+The AppImage can be copied anywhere — a USB drive, shared with others, or placed in `~/Applications`.
 
 ---
 

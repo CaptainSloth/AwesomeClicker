@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Background rounded square -->
+  <rect width="256" height="256" rx="52" fill="#1c1c2e"/>
+
+  <!-- Mouse body -->
+  <rect x="72" y="40" width="112" height="148" rx="56" fill="none" stroke="#cdd6f4" stroke-width="14"/>
+
+  <!-- Left/right button divider -->
+  <line x1="128" y1="40" x2="128" y2="116" stroke="#cdd6f4" stroke-width="8"/>
+
+  <!-- Left button active highlight -->
+  <path d="M79 104 Q79 47 128 47 L128 116 Q79 116 79 104Z" fill="#89b4fa" opacity="0.35"/>
+
+  <!-- Scroll wheel -->
+  <rect x="114" y="62" width="28" height="44" rx="14" fill="#89b4fa"/>
+
+  <!-- Click ripples (bottom-right) -->
+  <circle cx="186" cy="186" r="10" fill="#a6e3a1"/>
+  <circle cx="186" cy="186" r="24" fill="none" stroke="#a6e3a1" stroke-width="7" opacity="0.6"/>
+  <circle cx="186" cy="186" r="40" fill="none" stroke="#a6e3a1" stroke-width="4" opacity="0.3"/>
+</svg>
