@@ -116,15 +116,17 @@ jobs:
 
       - name: Publish release
         run: |
-          if gh release view "${{ github.ref_name }}" &>/dev/null; then
+          if gh release view "${{ github.ref_name }}" --repo "${{ github.repository }}" &>/dev/null; then
             gh release upload "${{ github.ref_name }}" \
               AwesomeClicker-x86_64.AppImage \
               AwesomeClicker-Windows-x86_64.exe \
-              --clobber
+              --clobber \
+              --repo "${{ github.repository }}"
           else
             gh release create "${{ github.ref_name }}" \
               --title "${{ github.ref_name }}" \
               --generate-notes \
+              --repo "${{ github.repository }}" \
               AwesomeClicker-x86_64.AppImage \
               AwesomeClicker-Windows-x86_64.exe
           fi
